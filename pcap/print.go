@@ -15,10 +15,11 @@ func Ntohs(byte []byte) uint16 {
 }
 
 func PrintArp(arp EtherArp, fp *os.File) {
-	fmt.Fprintf(fp, "sha=%s\n", myEtherNtoaR(arp.sha))
-	fmt.Fprintf(fp, "spa=%s\n", arpIP2str(arp.spa))
-	fmt.Fprintf(fp, "tha=%s\n", myEtherNtoaR(arp.tha))
-	fmt.Fprintf(fp, "tpa=%s\n", arpIP2str(arp.tpa))
+	fmt.Fprintf(fp, "------ARP------\n")
+	fmt.Fprintf(fp, "Sender HWADDR=%s\n", myEtherNtoaR(arp.sha))
+	fmt.Fprintf(fp, "Sender IPADDR=%s\n", arpIP2str(arp.spa))
+	fmt.Fprintf(fp, "Target HWADDR=%s\n", myEtherNtoaR(arp.tha))
+	fmt.Fprintf(fp, "Target IPADDR=%s\n", arpIP2str(arp.tpa))
 }
 
 func PrintEtherHeader(eh *EtherHeader, fp *os.File) int {

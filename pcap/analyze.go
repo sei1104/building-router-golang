@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"syscall"
 )
@@ -23,27 +22,48 @@ func htons(host uint16) int {
 func AnalyzeArp(data []byte, fp *os.File) int {
 	var arp EtherArp
 
-	copy(arp.sha[:], data[0:6])
-	copy(arp.spa[:], data[6:10])
-	copy(arp.tha[:], data[10:16])
-	copy(arp.tpa[:], data[16:20])
+	copy(arp.ehArpHdr.hln[:], data[14:16])
+	copy(arp.ehArpHdr.pro[:], data[16:18])
+	copy(arp.ehArpHdr.hln[:], data[18:19])
+	copy(arp.ehArpHdr.pln[:], data[19:20])
+	copy(arp.ehArpHdr.op[:], data[20:22])
+
+	copy(arp.sha[:], data[22:28])
+	copy(arp.spa[:], data[28:32])
+	copy(arp.tha[:], data[32:38])
+	copy(arp.tpa[:], data[38:42])
 
 	PrintArp(arp, fp)
 
 	return 0
 }
 
-func AnalyzePacket(eh *EtherHeader, fp *os.File, buf []byte, size int) {
-	if size < 14 {
-		log.Fatal("packet size < ether_header \n")
-	}
+// todo
+// checksum
+// AnalyzeICMP
+// AnalyzeTCP
+// AnalyzeUDP
 
-	if eh.EtherType == syscall.ETH_P_ARP {
-		log.Printf("Packet[%dbytes]\n", size)
+func AnalyzeIp(data []byte, fp *os.File) int {
+	// var iphdr *IpHdr
+
+	// copy(iphdr., src []Type)
+
+	return 0
+}
+
+func AnalyzePacket(eh *EtherHeader, fp *os.File, buf []byte, size int) {
+	// if size < 14 {
+	// 	log.Fatal("packet size < ether_header \n")
+	// }
+
+	switch eh.EtherType {
+	case syscall.ETH_P_ARP:
+		// log.Printf("ARP Packet[%dbytes]\n", size)
 		AnalyzeArp(buf, fp)
-	} else if eh.EtherType == syscall.ETH_P_IP {
-		log.Printf("Packet[%dbytes]\n", size)
-	} else if eh.EtherType == syscall.ETH_P_IPV6 {
-		log.Printf("Packet[%dbytes]\n", size)
+	case syscall.ETH_P_IP:
+		// log.Printf("IP Packet[%dbytes]\n", size)
+	case syscall.ETH_P_IPV6:
+		// log.Printf("IPv6 Packet[%dbytes]\n", size)
 	}
 }

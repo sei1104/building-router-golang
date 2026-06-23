@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"log"
 	"net"
 	"os"
@@ -41,9 +42,8 @@ func main() {
 	fd := InitRawSocket(arg)
 	defer syscall.Close(fd)
 
-	buf := make([]byte, 65536)
-
 	for {
+		buf := make([]byte, 100)
 		size, err := syscall.Read(fd, buf)
 		if err != nil {
 			log.Fatal(err)
@@ -52,12 +52,11 @@ func main() {
 			continue
 		}
 
-		// var eh EtherHeader
-		// copy(eh.DstMAC[:], buf[0:6])
-		// copy(eh.SrcMAC[:], buf[6:12])
-		// eh.EtherType = binary.BigEndian.Uint16(buf[12:14])
-		AnalyzeArp(buf, os.Stdout)
-		// PrintEtherHeader(&eh, os.Stdout)
+		var eh EtherHeader
+		copy(eh.DstMAC[:], buf[0:6])
+		copy(eh.SrcMAC[:], buf[6:12])
+		eh.EtherType = binary.BigEndian.Uint16(buf[12:14])
+		AnalyzePacket(&eh, os.Stdout, buf, size)
 		// fmt.Fprintf(os.Stdout, "%s\n", fmt.Sprintf("%02x---%02x", buf[0:6], buf[6:12]))
 	}
 }
