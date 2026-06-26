@@ -56,7 +56,7 @@ func main() {
 		copy(eh.DstMAC[:], buf[0:6])
 		copy(eh.SrcMAC[:], buf[6:12])
 		eh.EtherType = binary.BigEndian.Uint16(buf[12:14])
+
 		AnalyzePacket(&eh, os.Stdout, buf, size)
-		// fmt.Fprintf(os.Stdout, "%s\n", fmt.Sprintf("%02x---%02x", buf[0:6], buf[6:12]))
 	}
 }

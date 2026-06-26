@@ -1,5 +1,21 @@
 package main
 
+type InAddr struct {
+	inAddr [1]byte
+}
+
+type IhAddr struct {
+	icd_id  uint16
+	icd_seq uint16
+}
+
+type IhPmtu struct {
+	ipm_void    uint16
+	ipm_nextmtu uint16
+}
+
+type IhRtradv struct{}
+
 // EtherHeader no struct
 type EtherHeader struct {
 	DstMAC    [6]byte
@@ -16,18 +32,31 @@ type ArpHdr struct {
 	op  [2]byte
 }
 
-type IpHdr struct {
-	ihl      []byte
-	version  []byte
-	tos      []byte
-	tot_len  uint16
+type IPHeader struct {
+	version  uint8
+	ihl      uint8
+	tos      uint8
+	totLen   uint16
 	id       uint16
-	fragOff  uint16
+	flags    uint8
+	flagOff  uint16
 	ttl      uint8
 	protocol uint8
 	check    uint16
 	saddr    uint32
 	daddr    uint32
+}
+
+type Icmp struct {
+	icmp_type  uint8
+	icmp_code  uint8
+	icmp_cksum uint16
+	ih_pptr    [1]byte
+	ih_gwaddr  InAddr
+	ih_idseq   IhAddr
+	ih_void    uint32
+	ih_pmtu    IhPmtu
+	ih_rtradv  IhRtradv
 }
 
 // EtherArp no struct
