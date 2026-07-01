@@ -32,6 +32,19 @@ type ArpHdr struct {
 	op  [2]byte
 }
 
+type TCPHeader struct {
+	sport    uint16
+	dport    uint16
+	seq      uint32
+	ack_seq  uint32
+	dataOff  uint8
+	res      uint8
+	flags    uint16
+	window   uint16
+	checksum uint16
+	urp      uint16
+}
+
 type IPHeader struct {
 	version  uint8
 	ihl      uint8

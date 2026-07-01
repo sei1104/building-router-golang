@@ -22,6 +22,13 @@ func PrintArp(arp EtherArp, fp *os.File) {
 	fmt.Fprintf(fp, "Target IPADDR=%s\n", arpIP2str(arp.tpa))
 }
 
+func PrintTCP(tcp TCPHeader, fp *os.File) {
+	fmt.Fprintf(fp, "------TCP------\n")
+	fmt.Fprintf(fp, "source=%v,dest=%v\n", tcp.sport, tcp.dport)
+	fmt.Fprintf(fp, "seq=%v,ack_seq=%v\n", tcp.seq, tcp.ack_seq)
+	// fmt.Fprintf(fp, "doff=%v,ack=%v\n", tcp.seq, tcp.ack)
+}
+
 func PrintIPHeader(iph IPHeader, fp *os.File) {
 	fmt.Fprintf(fp, "------IPHeader------\n")
 	fmt.Fprintf(fp, "version=%d,ihl=%d,tos=%d,totLen=%d\n", iph.version, iph.ihl, iph.tos, iph.totLen)
